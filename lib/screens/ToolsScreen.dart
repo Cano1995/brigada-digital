@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart'; // Para formatear la fecha
 import '../data/bg_data.dart'; // Importar tu lista de fondos
-
+import 'user_manager.dart';
 class ToolsScreen extends StatefulWidget {
   
   final String truckId;
@@ -89,6 +89,7 @@ Future<void> _fetchGuardGroups() async {
     }
 
     try {
+      String user_Name = UserManager().user_Name;
       final response = await http.post(
         Uri.parse('https://gc4529031ed9eb7-p3zpjccedme5d537.adb.sa-saopaulo-1.oraclecloudapps.com/ords/dev/apexfly/update_existencia'), // Cambia por tu endpoint real
         headers: {'Content-Type': 'application/json'},
@@ -96,7 +97,8 @@ Future<void> _fetchGuardGroups() async {
           'toolId': toolId,
           'exists': exists,
           'observation': observation,
-          'quantity': quantity, // Enviar la cantidad actualizada
+          'quantity': quantity,
+          'user': user_Name, // Enviar la cantidad actualizada
         }),
       );
 
@@ -153,6 +155,7 @@ Future<void> _fetchGuardGroups() async {
   // Enviar datos a la API
   Future<void> _submitForm() async {
     try {
+      String user_Name = UserManager().user_Name;
       final response = await http.post(
         Uri.parse('https://tu-api.com/guardar_datos'), // Cambia por tu endpoint real
         headers: {'Content-Type': 'application/json'},
@@ -160,7 +163,7 @@ Future<void> _fetchGuardGroups() async {
           'date': DateFormat('dd-MM-yyyy').format(_selectedDate),
           'turn': _selectedTurn,
           'guardGroups': _selectedGuardGroups,
-          'user': _user, // Usuario actual
+          'user':  user_Name, // Usuario actual
         }),
       );
 
@@ -182,6 +185,7 @@ Future<void> _fetchGuardGroups() async {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size; // Para adaptar el diseño
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -268,7 +272,7 @@ Future<void> _fetchGuardGroups() async {
                           }
                         });
                         // Imprimir en la consola el estado actual de la lista seleccionada
-          print('imprimiendo: $_selectedGuardGroups');
+          
                       },
                       selectedColor: Colors.blue, // Color del chip cuando está seleccionado
                       avatar: _selectedGuardGroups.contains(group['id'])

@@ -7,6 +7,8 @@ import '../data/bg_data.dart';
 import '../utils/text_utils.dart';
 import 'home.dart';
 import 'registro.dart';
+import 'user_manager.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -51,7 +53,8 @@ class _LoginScreenState extends State<LoginScreen> {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(content: Text('Bienvenido, ${data['user']['name']}!')),
   );
-
+  
+UserManager().updateUserName(userName);
   // Redirigir a la pantalla de inicio
   Navigator.push(
     context,

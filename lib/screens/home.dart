@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'custom_drawer.dart'; // Asegúrate de importar el CustomDrawer
 import '../data/bg_data.dart';
-//import 'ubicaciones.dart';
+import 'user_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   final String userName;  // Recibimos el nombre del usuario
@@ -11,9 +11,11 @@ class HomeScreen extends StatefulWidget {
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
+  
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text("Inicio"),
         backgroundColor: Colors.blue,
       ),
-      drawer: CustomDrawer(selectedIndex: widget.selectedIndex), // Usamos el CustomDrawer aquí
+      drawer: CustomDrawer(selectedIndex: widget.selectedIndex,
+  userName: widget.userName,), // Usamos el CustomDrawer aquí
       body: Container(
         height: double.infinity,
         width: double.infinity,

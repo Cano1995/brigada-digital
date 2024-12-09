@@ -4,13 +4,14 @@ import 'package:brigada_digital/screens/home.dart';
 import 'package:brigada_digital/screens/login_screen.dart';
 import '../data/bg_data.dart'; // Asegúrate de importar el archivo bg_data.dart
 import 'ubicaciones.dart';
+import 'user_manager.dart';
 //import 'home.dart';
 
 class CustomDrawer extends StatelessWidget {
-  
   final int selectedIndex;
+  final String userName;  // Recibimos el nombre del usuario
 
-  const CustomDrawer({super.key, required this.selectedIndex});
+  const CustomDrawer({super.key, required this.selectedIndex, required this.userName});
 
   // Función para hacer logout
   Future<void> _logout(BuildContext context) async {
@@ -32,6 +33,9 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // Obtén el userName del Singleton
+    String user_Name = UserManager().user_Name;
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -68,7 +72,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.person),
-            title: const Text("Perfil"),
+            title:  const Text("Perfil"),
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Funcionalidad pendiente...')),
@@ -84,7 +88,7 @@ class CustomDrawer extends StatelessWidget {
               // Aquí navegas a la pantalla de Ubicación
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const UbiScreen(userName: '',)),
+                MaterialPageRoute(builder: (context) =>  UbiScreen(userName: userName)),
               );
             },
           ),

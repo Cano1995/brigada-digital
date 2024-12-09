@@ -10,7 +10,8 @@ import 'login_screen.dart';
 import '../data/bg_data.dart'; // Asegúrate de tener este archivo con la lista bgList
 
 class UbiScreen extends StatefulWidget {
-  final String userName;  
+  
+  final String userName;  // Recibimos el nombre del usuario
   const UbiScreen({super.key,required this.userName});
 
   @override
@@ -38,7 +39,7 @@ class _UbiScreenState extends State<UbiScreen> {
         Uri.parse(
             'https://gc4529031ed9eb7-p3zpjccedme5d537.adb.sa-saopaulo-1.oraclecloudapps.com/ords/dev/apexfly/ubicaciones'),
       );
-
+ print("El valor de la variable es: ${widget.userName}");
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
@@ -92,6 +93,7 @@ class _UbiScreenState extends State<UbiScreen> {
   // Método para actualizar la lista de camiones (refresh)
   void _refreshTrucks() {
     _fetchTrucks(); // Vuelve a obtener los camiones desde la API
+   
   }
 
   @override
@@ -111,7 +113,8 @@ class _UbiScreenState extends State<UbiScreen> {
           },
         ),
       ),
-      drawer: CustomDrawer(selectedIndex: 0), // Usamos CustomDrawer aquí, puedes pasar el índice adecuado
+      drawer: CustomDrawer(selectedIndex: 0,
+  userName: widget.userName,), // Usamos CustomDrawer aquí, puedes pasar el índice adecuado
       body: Container(
         height: double.infinity,
         width: double.infinity,
@@ -125,10 +128,12 @@ class _UbiScreenState extends State<UbiScreen> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator()) // Mientras carga
             : ListView.builder(
+              
                 itemCount: trucks.length,
                 itemBuilder: (context, index) {
                   final truck = trucks[index];
                   return Card(
+                    
                     margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
