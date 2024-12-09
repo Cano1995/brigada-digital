@@ -10,7 +10,8 @@ import 'login_screen.dart';
 import '../data/bg_data.dart'; // Asegúrate de tener este archivo con la lista bgList
 
 class UbiScreen extends StatefulWidget {
-  const UbiScreen({super.key});
+  final String userName;  
+  const UbiScreen({super.key,required this.userName});
 
   @override
   _UbiScreenState createState() => _UbiScreenState();

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart'; // Para formatear la fecha
 import '../data/bg_data.dart'; // Importar tu lista de fondos
 
 class ToolsScreen extends StatefulWidget {
+  
   final String truckId;
   final int selectedIndex; // Indica el índice del fondo a usar
 
@@ -16,6 +17,7 @@ class ToolsScreen extends StatefulWidget {
 
 class _ToolsScreenState extends State<ToolsScreen> {
   List<dynamic> tools = []; // Lista de herramientas
+  List<dynamic> guardGroups = [];//lista de botones.
   bool _isLoading = false;
   DateTime _selectedDate = DateTime.now(); // Fecha seleccionada por defecto es la fecha actual
   String _selectedTurn = "Diurno"; // Turno seleccionado por defecto
@@ -26,7 +28,9 @@ class _ToolsScreenState extends State<ToolsScreen> {
   void initState() {
     super.initState();
     _fetchTools(); // Cargar herramientas al inicio
+    _fetchGuardGroups(); // Cargar grupos de guardia
   }
+  
 
   // Obtener herramientas por camión usando el truckId
   Future<void> _fetchTools() async {
@@ -57,6 +61,26 @@ class _ToolsScreenState extends State<ToolsScreen> {
     }
   }
 
+  // Método para obtener los grupos de guardia desde la API
+Future<void> _fetchGuardGroups() async {
+  try {
+    final response = await http.get(
+      Uri.parse('https://gc4529031ed9eb7-p3zpjccedme5d537.adb.sa-saopaulo-1.oraclecloudapps.com/ords/dev/apexfly/grupo_guardia'), // Cambia esta URL por la de tu API real
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        guardGroups = data['items']; // Supongamos que tu API devuelve un campo 'items'
+      });
+    } else {
+      _showError("No se pudieron cargar los grupos de guardia.");
+    }
+  } catch (e) {
+    _showError("Ocurrió un error al cargar los grupos de guardia: $e");
+  }
+}
+
   // Método para actualizar la existencia de la herramienta
   Future<void> _updateTool(String toolId, bool exists, String observation, int quantity) async {
     if (observation.isEmpty) {
@@ -66,7 +90,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('https://tu-api.com/herramienta/actualizar'), // Cambia por tu endpoint real
+        Uri.parse('https://gc4529031ed9eb7-p3zpjccedme5d537.adb.sa-saopaulo-1.oraclecloudapps.com/ords/dev/apexfly/update_existencia'), // Cambia por tu endpoint real
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'toolId': toolId,
@@ -133,7 +157,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
         Uri.parse('https://tu-api.com/guardar_datos'), // Cambia por tu endpoint real
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'date': DateFormat('yyyy-MM-dd').format(_selectedDate),
+          'date': DateFormat('dd-MM-yyyy').format(_selectedDate),
           'turn': _selectedTurn,
           'guardGroups': _selectedGuardGroups,
           'user': _user, // Usuario actual
@@ -186,7 +210,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
               // Selección de fecha
               Row(
                 children: [
-                  Text("Fecha: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}",
+                  Text("Fecha: ${DateFormat('dd-MM-yyyy').format(_selectedDate)}",
                   style: TextStyle(color: Colors.white),),
                   IconButton(
                     icon: Icon(Icons.calendar_today),
@@ -225,24 +249,37 @@ class _ToolsScreenState extends State<ToolsScreen> {
               ),
 
               // Selección de grupos de guardia
+              // Selección de grupos de guardia con color y check
               Wrap(
-                spacing: 8.0,
-                children: ['Grupo A', 'Grupo B', 'Grupo C'].map((group) {
-                  return FilterChip(
-                    label: Text(group),
-                    selected: _selectedGuardGroups.contains(group),
-                    onSelected: (bool selected) {
-                      setState(() {
-                        if (selected) {
-                          _selectedGuardGroups.add(group);
-                        } else {
-                          _selectedGuardGroups.remove(group);
-                        }
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
+                  spacing: 8.0,
+                  children: guardGroups.map((group) {
+                    return FilterChip(
+                      label: Text(group['nombre']), // Usa el nombre del grupo desde la API
+                      selected: _selectedGuardGroups.contains(group['id'].toString()),
+                      onSelected: (bool selected) {
+                        setState(() {
+                          if (selected) {
+                            // Si se selecciona el chip, limpia la selección actual y selecciona el nuevo
+                            _selectedGuardGroups.clear();
+                            _selectedGuardGroups.add(group['id'].toString());
+                          } else {
+                            // Si se deselecciona, se limpia la selección
+                            _selectedGuardGroups.clear();
+                          }
+                        });
+                        // Imprimir en la consola el estado actual de la lista seleccionada
+          print('imprimiendo: $_selectedGuardGroups');
+                      },
+                      selectedColor: Colors.blue, // Color del chip cuando está seleccionado
+                      avatar: _selectedGuardGroups.contains(group['id'])
+                          ? const Icon(Icons.check, color: Colors.white)
+                          : null,
+                    );
+                  }).toList(),
+                ),
+
+
+
               
               // Lista de herramientas
               Expanded(
@@ -260,7 +297,14 @@ class _ToolsScreenState extends State<ToolsScreen> {
                                 tool['name'],
                                 style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              subtitle: Text('Existencia: ${tool['quantity']}'),
+                              subtitle: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('obs: ${tool['obs']}'), // Nuevo subtítulo
+                                        Text('Existencia: ${tool['quantity']}'),
+                                      ],
+                                    ),
+                              //subtitle: Text('Existencia: ${tool['quantity']}'),
                               trailing: Checkbox(
                                 value: tool['exists'] == 1,
                                 onChanged: (bool? value) {

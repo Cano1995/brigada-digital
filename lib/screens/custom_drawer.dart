@@ -7,6 +7,7 @@ import 'ubicaciones.dart';
 //import 'home.dart';
 
 class CustomDrawer extends StatelessWidget {
+  
   final int selectedIndex;
 
   const CustomDrawer({super.key, required this.selectedIndex});
@@ -83,7 +84,7 @@ class CustomDrawer extends StatelessWidget {
               // Aquí navegas a la pantalla de Ubicación
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const UbiScreen()),
+                MaterialPageRoute(builder: (context) => const UbiScreen(userName: '',)),
               );
             },
           ),
