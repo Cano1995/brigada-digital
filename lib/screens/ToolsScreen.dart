@@ -22,7 +22,7 @@ class _ToolsScreenState extends State<ToolsScreen> {
   DateTime _selectedDate = DateTime.now(); // Fecha seleccionada por defecto es la fecha actual
   String _selectedTurn = "Diurno"; // Turno seleccionado por defecto
   List<String> _selectedGuardGroups = []; // Grupos de guardia seleccionados
-  String _user = "Usuario123"; // Aquí deberías obtener el usuario actual de alguna forma
+   // Aquí deberías obtener el usuario actual de alguna forma
 
   @override
   void initState() {
