@@ -1,0 +1,15 @@
+autonomous https://www.oracle.com/cloud/sign-in.html?redirect_uri=https%3A%2F%2Fcloud.oracle.com%2Fresourcemanager%2Fjobs%2Focid1.ormjob.oc1.sa-saopaulo-1.amaaaaaatsrjayia6ebjkecvtazhfmbbi7ofys6xd6etkcxnhdjta3sljv6a%2Fresources%3Fregion%3Dsa-saopaulo-1
+
+apex oci https://gc4529031ed9eb7-p3zpjccedme5d537.adb.sa-saopaulo-1.oraclecloudapps.com/ords/r/apex/workspace-sign-in/oracle-apex-sign-in?session=12730257882901
+workspace WS_HATOPLUS
+user DEV
+pass Cristhian@123
+
+perfil en ace  https://signon.oracle.com/signin
+user cristhian.cano.bogado@gmail.com
+pass Servimaq-3235
+
+espacio gratuito https://apex.oracle.com/pls/apex/f?p=4550:1:11774157992042:::::
+workspace PARAGUAYANDEV
+usuario PARAGUAYANDEV1@GMAIL.COM
+pass Paraguayandev@123
